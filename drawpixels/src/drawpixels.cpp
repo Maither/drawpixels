@@ -93,6 +93,13 @@ static void recordtobuffer(int i, float v)
   buffer_info.bytes[i] = v > 1 ? 255 : v * 255.0;
 }
 
+
+// Returns the mixed color based on source and destination colors and their alphas
+// sc: source color component
+// sa: source alpha component
+// dc: destination color component
+// da: destination alpha component
+// oa: output alpha component
 static float getmixrgb(float dc, float da, float sc, float sa, float oa)
 {
   if (oa == 0)
