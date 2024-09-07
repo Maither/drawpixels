@@ -35,4 +35,7 @@ function drawpixels.color(buffer_info, x, y) end
 ---Draw a bezier line between two points and one control point:
 function drawpixels.bezier(buffer_info, x0, y0, xc, yc, x1, y1, red, green, blue, alpha) end
 
+function drawpixels.fading(buffer_info, x0, y0, red, green, blue, alpha) end
+
+
 return
