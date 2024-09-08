@@ -2158,7 +2158,7 @@ static int fad(lua_State *L){
 
   int x = findFithEdge(x0, y0, color);
 
-  cout << "Hello World!";
+  cin << "Hello World!";
 
   assert(top == lua_gettop(L));
   return 0;
