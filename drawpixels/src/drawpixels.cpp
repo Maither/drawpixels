@@ -2158,7 +2158,18 @@ static int fad(lua_State *L){
 
   int x = findFithEdge(x0, y0, color);
 
-  cin << "Hello World!";
+  if (x == -1) {
+    return 1;
+  }
+
+  int fithMatch[2] = {x, y0};
+
+  int nebourgs[8][2];
+
+  generateNebours(firthMatch, translations, nebourgs);
+
+
+  
 
   assert(top == lua_gettop(L));
   return 0;
