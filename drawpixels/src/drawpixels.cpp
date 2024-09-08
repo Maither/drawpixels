@@ -2162,7 +2162,7 @@ static int fad(lua_State *L){
     return 1;
   }
 
-  int fithMatch[2] = {x, y0};
+  int firthMatch[2] = {x, y0};
 
   int nebourgs[8][2];
 
