@@ -2082,12 +2082,12 @@ static int fading_edge_lua(lua_State *L)
 
 /////////////////////////////////////////////
 namespace{
-  char translations[][2] = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
+  char translations[8][2] = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
 }
 
-void generateNebours(const int a[2], const int translations[][2], int count, int nebours[][2])
+void generateNebours(const int a[2], const char translations[8][2], int nebours[8][2])
 {
-  for (int i = 0; i < count; i++)
+  for (int i = 0; i < 8; i++)
   {
     nebours[i][0] = a[0] + translations[i][0];
     nebours[i][1] = a[1] + translations[i][1];
