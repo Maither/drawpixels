@@ -2081,6 +2081,25 @@ static int fading_edge_lua(lua_State *L)
 
 
 /////////////////////////////////////////////
+namespace{
+  char translations[][2] = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
+}
+
+void generateNebours(const int a[2], const int translations[][2], int count, int nebours[][2])
+{
+  for (int i = 0; i < count; i++)
+  {
+    nebours[i][0] = a[0] + translations[i][0];
+    nebours[i][1] = a[1] + translations[i][1];
+  }
+}
+
+static void color_all(Color color, int count, int ps[][2]){
+  for (int i = 0; i < count; i++)
+  {
+    putpixel(ps[i][0], ps[i][1], color.r, color.g, color.b, 1);
+  }
+}
 
 static bool compare_color(int i, Color color){
   uint32_t b_r = buffer_info.bytes[i];
@@ -2093,6 +2112,25 @@ static bool compare_color(int i, Color color){
   else{
     return false;
   }
+}
+
+int findFithEdge(int x, int y, Color color){
+  int foo = 0;
+
+  while (not compare_color(xytoi(x, y), color))
+  {
+    x++;
+
+    if (x > buffer_info.width)
+    {
+      x = 0;
+      if (foo > 0){
+        return -1;
+      }
+      foo ++;
+    }
+  }
+  return x;
 }
 
 static int fad(lua_State *L){
@@ -2112,25 +2150,13 @@ static int fad(lua_State *L){
     a = luaL_checknumber(L, 6);
   }
 
-  int gx [3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
-  int gy [3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
   int curentIndex = 0;
   Color color;
   color.r = r;
   color.g = g;
   color.b = b;
 
-  for (size_t i = 0; i < buffer_info.width; i++)
-  {
-    for (size_t j = 0; j < buffer_info; j++)
-    {
-      curentIndex = xytoi(i, j);
-      if (compare_color(curentIndex, color))
-      {
-        putpixel(i, j, 200, 0, 0.b, 1);
-      }
-    }
-  }
+  int x = findFithEdge(x0, y0, color);
 
   assert(top == lua_gettop(L));
   return 0;
