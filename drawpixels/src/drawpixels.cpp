@@ -2168,8 +2168,7 @@ static int fad(lua_State *L){
 
   generateNebours(firthMatch, translations, nebourgs);
 
-
-  
+  std::list<int[2]> toBeColored;
 
   assert(top == lua_gettop(L));
   return 0;
