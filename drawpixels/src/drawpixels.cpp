@@ -10,9 +10,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <vector>
-#include <list>
 #include <algorithm>
-//#include <string>
 #include <stack>
 
 struct BufferInfo
@@ -2211,7 +2209,16 @@ static int fad(lua_State *L){
 
   generateNebours(firthMatch, translations, nebourgs);
 
-  std::list<int[2]> toBeColored;
+  int nFirthMatch = xytoi(firthMatch[0], firthMatch[1]);
+
+  for (char i = 0; i < 8; i++)
+  {
+    int nNebourg = xytoi(nebourgs[i][0], nebourgs[i][1]);
+    if(not compare_color(nebourg, color))
+    {
+      putpixel(nebourgs[i][0], nebourgs[i][1], 255, 255, 255, 255);
+    }
+  }
 
   assert(top == lua_gettop(L));
   return 0;
