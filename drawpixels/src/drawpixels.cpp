@@ -2218,12 +2218,9 @@ static int fad(lua_State *L){
   for (char i = 0; i < 8; i++)
   {
     int nNebourg = xytoi(nebourgs[i][0], nebourgs[i][1]);
-    putpixel(nebourgs[i][0], nebourgs[i][1], 255, 255, 0, 255);
-    putpixel(nebourgs[i][0], nebourgs[i][1] + 1, 255, 255, 0, 255);
-    putpixel(nebourgs[i][0], nebourgs[i][1] + 2, 255, 255, 0, 255);
     if(not compare_color(nNebourg, color))
     {
-      putpixel(nebourgs[i][0], nebourgs[i][1], 255, 255, 0, 255);
+      putpixel(nebourgs[i][0], nebourgs[i][1], 0, 0, 0, 255);
     }
   }
 
