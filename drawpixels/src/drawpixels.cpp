@@ -2218,18 +2218,25 @@ static int fad(lua_State *L){
 
   int crossIndex[4][2];
 
+  std::list<int[2]> test;
+
   for (char i = 0; i < 8; i++)
   {
     int nNebourg = xytoi(nebourgs[i][0], nebourgs[i][1]);
-    if(compare_color(nNebourg, color))
+    if(not compare_color(nNebourg, color))
     {
       int foo[2];
       foo[0] = nebourgs[i][0];
       foo[1] = nebourgs[i][1];
       generateNebours(foo, crossTranslations, crossIndex, 4);
 
-      //putpixel(nebourgs[i][0], nebourgs[i][1], 0, 0, 0, 255);
+      for (int j = 0; j < 4; j++)
+      {
+        break;
+      }
+      
 
+      //putpixel(nebourgs[i][0], nebourgs[i][1], 0, 0, 0, 255);
     }
   }
 
