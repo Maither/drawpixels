@@ -12,6 +12,7 @@
 #include <vector>
 #include <algorithm>
 #include <stack>
+#include <list>
 
 struct BufferInfo
 {
