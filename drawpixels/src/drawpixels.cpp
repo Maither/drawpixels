@@ -2124,19 +2124,41 @@ namespace{
       {0, 0, 1}
     }
     };
+
   char crossTranslations[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+  struct pt {
+    public:
+      int x;
+      int y;
+      int _xytoi;
+
+      pt () {
+        this->x = 0; 
+        this-> y = 0;
+        this->_xytoi = 0;
+        }
+
+      pt(int x, int y) {
+        this->x = x; 
+        this->y = y;
+        this->_xytoi = xytoi(x, y);
+        }
+
+      void setxy(int x, int y) {
+        this->x = x; 
+        this->y = y;
+        this->_xytoi = xytoi(x, y);
+        }
+  };
 }
 
-void faitunecroix(int x, int y){
-  return;
-}
-
-void generateNebours(const int a[2], const char translations[][2], int nebours[][2], char count)
+void generateNebours(const pt a, const char translations[][2], pt nebours[], char count)
 {
   for (int i = 0; i < count; i++)
   {
-    nebours[i][0] = a[0] + translations[i][0];
-    nebours[i][1] = a[1] + translations[i][1];
+    nebours[i].x = a.x + translations[i][0];
+    nebours[i].y = a.y + translations[i][1];
   }
 }
 
@@ -2147,10 +2169,11 @@ static void color_all(Color color, int count, int ps[][2]){
   }
 }
 
-static bool compare_color(int i, Color color){
-  uint32_t b_r = buffer_info.bytes[i];
-  uint32_t b_g = buffer_info.bytes[i + 1];
-  uint32_t b_b = buffer_info.bytes[i + 2];
+static bool compare_color(pt i, Color color){
+
+  uint32_t b_r = buffer_info.bytes[i._xytoi];
+  uint32_t b_g = buffer_info.bytes[i._xytoi + 1];
+  uint32_t b_b = buffer_info.bytes[i._xytoi + 2];
 
   if(b_r == color.r && b_g == color.g && b_b == color.b){
     return true;
@@ -2162,21 +2185,31 @@ static bool compare_color(int i, Color color){
 
 int findFithEdge(int x, int y, Color color){
   int foo = 0;
+  int bufX = x;
 
-  while (not compare_color(xytoi(x, y), color))
+  while (not compare_color(xytoi(bufX, y), color))
   {
-    x++;
-
-    if (x > buffer_info.width)
+    
+    if( foo == 0)
     {
-      x = 0;
-      if (foo > 0){
+      bufX++;
+      if (bufX > buffer_info.width)
+      {
+        bufX = x;
+        foo ++;
+      }
+    else
+    {
+      bufX--;
+      if (bufX < 0)
+      {
         return -1;
       }
-      foo ++;
+    }
+
     }
   }
-  return x;
+  return bufX;
 }
 
 static int fad(lua_State *L){
@@ -2208,9 +2241,9 @@ static int fad(lua_State *L){
     return 1;
   }
 
-  int firthMatch[2] = {x, y0};
+  pt firthMatch{x, y0};
 
-  int nebourgs[8][2];
+  pt nebourgs[8];
 
   generateNebours(firthMatch, translations, nebourgs, 8);
 
@@ -2218,7 +2251,9 @@ static int fad(lua_State *L){
 
   int crossIndex[4][2];
 
-  std::list<int[2]> test;
+
+
+  std::list<pt> test;
 
   for (char i = 0; i < 8; i++)
   {
