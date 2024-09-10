@@ -2145,6 +2145,10 @@ namespace{
         this->_xytoi = xytoi(x, y);
         }
 
+      pt(pt a){
+        pt(a.x, a.y);
+      }
+
       void setxy(int x, int y) {
         this->x = x; 
         this->y = y;
@@ -2198,6 +2202,7 @@ int findFithEdge(int x, int y, Color color){
         bufX = x;
         foo ++;
       }
+    }
     else
     {
       bufX--;
@@ -2205,8 +2210,6 @@ int findFithEdge(int x, int y, Color color){
       {
         return -1;
       }
-    }
-
     }
   }
   return bufX;
@@ -2247,18 +2250,13 @@ static int fad(lua_State *L){
 
   generateNebours(firthMatch, translations, nebourgs, 8);
 
-  int nFirthMatch = xytoi(firthMatch[0], firthMatch[1]);
-
   int crossIndex[4][2];
-
-
 
   std::list<pt> test;
 
   for (char i = 0; i < 8; i++)
   {
-    int nNebourg = xytoi(nebourgs[i][0], nebourgs[i][1]);
-    if(not compare_color(nNebourg, color))
+    if(not compare_color(nebourgs._xytoi, color))
     {
       int foo[2];
       foo[0] = nebourgs[i][0];
