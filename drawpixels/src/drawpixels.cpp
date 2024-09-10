@@ -2143,6 +2143,7 @@ static void color_all(Color color, int count, int ps[][2]){
   for (int i = 0; i < count; i++)
   {
     putpixel(ps[i][0], ps[i][1], color.r, color.g, color.b, 1);
+    printf("test");
   }
 }
 
