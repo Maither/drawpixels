@@ -2130,9 +2130,9 @@ void faitunecroix(int x, int y){
   return;
 }
 
-void generateNebours(const int a[2], const char translations[8][2], int nebours[8][2])
+void generateNebours(const int a[2], const char translations[][2], int nebours[][2], char count)
 {
-  for (int i = 0; i < 8; i++)
+  for (int i = 0; i < count; i++)
   {
     nebours[i][0] = a[0] + translations[i][0];
     nebours[i][1] = a[1] + translations[i][1];
@@ -2143,7 +2143,6 @@ static void color_all(Color color, int count, int ps[][2]){
   for (int i = 0; i < count; i++)
   {
     putpixel(ps[i][0], ps[i][1], color.r, color.g, color.b, 1);
-    printf("test");
   }
 }
 
@@ -2212,16 +2211,20 @@ static int fad(lua_State *L){
 
   int nebourgs[8][2];
 
-  generateNebours(firthMatch, translations, nebourgs);
+  generateNebours(firthMatch, translations, nebourgs, 8);
 
   int nFirthMatch = xytoi(firthMatch[0], firthMatch[1]);
+
+  char cross[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
   for (char i = 0; i < 8; i++)
   {
     int nNebourg = xytoi(nebourgs[i][0], nebourgs[i][1]);
-    if(not compare_color(nNebourg, color))
+    if(compare_color(nNebourg, color))
     {
-      putpixel(nebourgs[i][0], nebourgs[i][1], 0, 0, 0, 255);
+
+      //putpixel(nebourgs[i][0], nebourgs[i][1], 0, 0, 0, 255);
+
     }
   }
 
