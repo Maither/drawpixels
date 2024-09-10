@@ -2259,7 +2259,7 @@ static int fad(lua_State *L){
 
   for (char i = 0; i < 8; i++)
   {
-    if(not compare_color(nebourgs[i]._xytoi, color))
+    if(not compare_color(nebourgs[i], color))
     {
       pt foo{nebourgs[i]};
       generateNebours(foo, crossTranslations, crossIndex, 4);
