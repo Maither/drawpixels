@@ -2145,7 +2145,7 @@ namespace{
         this->_xytoi = xytoi(x, y);
         }
 
-      pt(pt a){
+      pt(const pt &a){
         pt(a.x, a.y);
       }
 
@@ -2189,30 +2189,30 @@ static bool compare_color(pt i, Color color){
 
 int findFithEdge(int x, int y, Color color){
   int foo = 0;
-  int bufX = x;
+  pt XY{x, y};
 
-  while (not compare_color(xytoi(bufX, y), color))
+  while (not compare_color(XY, color))
   {
     
     if( foo == 0)
     {
-      bufX++;
-      if (bufX > buffer_info.width)
+      XY.setxy(XY.x++, XY.y);
+      if (XY.x > buffer_info.width)
       {
-        bufX = x;
+        XY.setxy(x, XY.y);
         foo ++;
       }
     }
     else
     {
-      bufX--;
-      if (bufX < 0)
+      XY.setxy(XY.x--, XY.y);
+      if (XY.x < 0)
       {
         return -1;
       }
     }
   }
-  return bufX;
+  return XY.x;
 }
 
 static int fad(lua_State *L){
@@ -2258,9 +2258,7 @@ static int fad(lua_State *L){
   {
     if(not compare_color(nebourgs._xytoi, color))
     {
-      int foo[2];
-      foo[0] = nebourgs[i][0];
-      foo[1] = nebourgs[i][1];
+      pt foo{nebourgs[i]};
       generateNebours(foo, crossTranslations, crossIndex, 4);
 
       for (int j = 0; j < 4; j++)
