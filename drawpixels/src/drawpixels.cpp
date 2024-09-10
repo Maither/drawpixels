@@ -2162,8 +2162,10 @@ void generateNebours(const pt a, const char translations[][2], pt nebours[], cha
 {
   for (int i = 0; i < count; i++)
   {
-    nebours[i].x = a.x + translations[i][0];
-    nebours[i].y = a.y + translations[i][1];
+    //nebours[i].x = a.x + translations[i][0];
+    //nebours[i].y = a.y + translations[i][1];
+    nebours[i].setxy(a.x + translations[i][0], a.y + translations[i][1]);
+
   }
 }
 
@@ -2251,13 +2253,13 @@ static int fad(lua_State *L){
 
   generateNebours(firthMatch, translations, nebourgs, 8);
 
-  int crossIndex[4][2];
+  pt crossIndex[4];
 
   std::list<pt> test;
 
   for (char i = 0; i < 8; i++)
   {
-    if(not compare_color(nebourgs._xytoi, color))
+    if(not compare_color(nebourgs[i]._xytoi, color))
     {
       pt foo{nebourgs[i]};
       generateNebours(foo, crossTranslations, crossIndex, 4);
