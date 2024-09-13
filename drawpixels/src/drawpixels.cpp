@@ -1894,193 +1894,6 @@ static int draw_bezier_lua(lua_State *L)
   return 0;
 }
 
-/*
-////////////////////////////////////////////////*
-//function drawpixels.line(buffer_info, x0, y0, x1, y1, red, green, blue, alpha) end
-static int fading_edge_lua(lua_State *L)
-{
- //x0, y0 : x0, y0 stating point
-
- int top = lua_gettop(L) + 5;
-
-  read_and_validate_buffer_info(L, 1);
-  int32_t x0 = luaL_checknumber(L, 2);
-  int32_t y0 = luaL_checknumber(L, 3);
-  int32_t x1 = luaL_checknumber(L, 4);
-  int32_t y1 = luaL_checknumber(L, 5);
-  uint32_t r = luaL_checknumber(L, 6);
-  uint32_t g = luaL_checknumber(L, 7);
-  uint32_t b = luaL_checknumber(L, 8);
-  uint32_t a = 0;
-
-  if (lua_isnumber(L, 9) == 1)
-  {
-    a = luaL_checknumber(L, 9);
-  }
-
-  static bool compare_color(int i, Color color){
-    uint32_t b_r = buffer_info.bytes[i];
-    uint32_t b_g = buffer_info.bytes[i + 1];
-    uint32_t b_b = buffer_info.bytes[i + 2];
-
-    if(b_r == color.r && b_g == color.g && b_b == color.b){
-      return true;
-    }
-    else{
-      return false;
-    }
-  }
-
-  static void color_all(Color color, int count, int ps[][2]){
-    for (size_t i = 0; i < count; i++)
-    {
-      putpixel(ps[i][0], ps[i][1], color.r, color.g, color.b, 1);
-    }
-  }
-  //1 find firth edge color that match specifie color
-    // find the color of the index
-  Color color;
-  color.r = r;
-  color.g = g;
-  color.b = b;
-
-  int x = (int)x0;
-  int foo = 0;
-
-  while (not compare_color(xytoi(x, y0), color))
-  {
-    x++;
-
-    if (x > buffer_info.width)
-    {
-      x = 0;
-      if (foo > 0){
-        return 1;
-      }
-      foo ++;
-    }
-  }
-
-  //at this point x,y0 is the coordinate of the match color
-
-  //2 find and store all edge : 3*3 matrix that scan for the next edge
-
-  //defaut direction to find the next match
-  //cSc char scalar
-
-  char cScDir[2] = {0, 1};
-  int iScFirthMatch[2] = {x, (int)y0};
-  int iScNewMatch[2] = {0, 0};
-
-  void addScalar(int a[2], const int b[2]){
-    a[0] += b[0];
-    a[1] += b[1];
-  }
-
-  addScalar(iScNewMatch, iScFirthMatch);
-
-  
-
-  
-
-  void generateNebours(const int a[2], const int translations[][2], int count, int nebours[][2])
-  {
-    for (size_t i = 0; i < count; i++)
-    {
-      nebours[i][0] = a[0] + translations[i][0];
-      nebours[i][1] = a[1] + translations[i][1];
-    }
-  }
-
-  char cScTranslations[][] = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
-  int iScCanditates[8][2];
-
-  int delay = 0;
-  int foo = 0;
-
-  while(foo < buffer_info.width * buffer_info.height)
-  {
-    bool match_found = false;
-    generate_nebour(iScNewMatch, 8, iScCanditates);
-    for (size_t i = 0; i < 8; i++)
-    {
-      if(compare_color(xytoi(iScCanditates[i][0], iScCanditates[i][1]), color))
-      {
-        Point nebour = generate_nebour(canditate);
-        for (size_t i = 0; i < 8; i++)
-        {
-          if(not compare_color(xytoi(nebour[i].x, nebour[i].y), color)){
-            new_match = canditate
-            color_all(color, 8, nebour)
-            break;
-          }
-          break;
-        }
-    }
-    }
-    
-
-    if(compare_color(xytoi(canditate.x, canditate.y), color))
-    {
-      Point nebour = generate_nebour(canditate);
-      for (size_t i = 0; i < 8; i++)
-      {
-        if(not compare_color(xytoi(nebour[i].x, nebour[i].y), color)){
-          new_match = canditate
-          color_all(color, 8, nebour)
-        }
-      }
-      
-    }
-    else
-    {
-      
-    }
-
-    /*
-    for (int i = 1; i <= -1; i--){
-    for (int j = 1; j <= -1; j--){
-      int idx = xytoi(i +1, j + 1);
-
-      uint32_t b_r = buffer_info.bytes[xytoi]);
-      uint32_t b_g = buffer_info.bytes[xytoi + 1]);
-      uint32_t b_b = buffer_info.bytes[xytoi + 2]);
-
-      if (b_r == r && b_g == g && b_b == b){
-        box[i + 1][j + 1] = true;
-      }
-      } *//*
-    }
-   
-
-    int idx = xytoi(new_match.x + dir_scalar.x, new_match.y + dir_scalar.y);
-
-    uint32_t b_r = buffer_info.bytes[xytoi]);
-    uint32_t b_g = buffer_info.bytes[xytoi + 1]);
-    uint32_t b_b = buffer_info.bytes[xytoi + 2]);
-
-    if (b_r == r && b_g == g && b_b == b){
-        
-    }
-    else
-    {
-
-    }
-
-
-    foo++;
-  }
-  
-
-  //3 modifie edge to specifie color 
-
-  assert(top == lua_gettop(L));
-  return 0;
-}*///*/
-
-
-
-/////////////////////////////////////////////
 namespace{
   char translations[8][2] = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
   bool validates[8][3][3] = {
@@ -2186,11 +1999,13 @@ void generateNebours(const pt a, const char translations[][2], pt nebours[], cha
   }
 }
 
-static void color_all(Color color, int count, int ps[][2]){
-  for (int i = 0; i < count; i++)
+static void color_all(Color color, list<pt>& toBeColord){
+
+  for(const pt& i: toBeColord)
   {
-    putpixel(ps[i][0], ps[i][1], color.r, color.g, color.b, 1);
+    putpixel(i.x, i.y, color.r, color.g, color.b, 1)
   }
+
 }
 
 static bool compare_color(pt i, Color color){
@@ -2233,6 +2048,75 @@ int findFithEdge(int x, int y, Color color){
     }
   }
   return XY.x;
+}
+
+void storeAllEdge(pt firthMatch, list<pt>& toBeColord){
+
+  int dirIndex;
+
+  for (char i = 0; i < 8; i++)
+  {
+    pt currentPoint = firthMatch + translations[i];
+
+    if(not compare_color(currentPoint, color))
+    {
+      toBeColord::push_back(currentPoint);
+    }
+    else
+    {
+      for (char j = 0; j < 4; j++)
+      {
+        pt _currentPoint = currentPoint + crossTranslations[j];
+        if(not compare_color(_currentPoint, color))
+        {
+          newMatch = currentPoint;
+          dirIndex = i;
+          break;
+        }
+      }
+
+    }
+  }
+
+  pt match = newMatch;
+
+
+while (not newMatch == firthMatch)
+{
+
+
+  for (char i = 0; i < 8; i++)
+  {
+    if(newMatch == firthMatch){
+      return;
+    }
+
+    pt currentPoint = match + translations[i];
+    if(validates[dirIndex][translations[i][0]][translations[i][1]]){
+      if(not compare_color(currentPoint, color))
+      {
+        toBeColord::push_back(currentPoint);
+      }
+      else
+      {
+        for (char j = 0; j < 4; j++)
+        {
+          pt _currentPoint = currentPoint + crossTranslations[j];
+          if(not compare_color(_currentPoint, color))
+          {
+            newMatch = currentPoint;
+            dirIndex = i;
+            break;
+          }
+        }
+      }
+      match = newMatch;
+    }
+  }
+}
+
+
+
 }
 
 static int fad(lua_State *L){
@@ -2285,7 +2169,6 @@ static int fad(lua_State *L){
     {
       for (char j = 0; j < 4; j++)
       {
-        ///////////////////////////////
         pt _currentPoint = currentPoint + crossTranslations[j];
         if(not compare_color(_currentPoint, color))
         {
@@ -2299,6 +2182,10 @@ static int fad(lua_State *L){
   }
 
   match = newMatch;
+
+  storeAllEdge(firthMatch, toBeColord);
+
+  color_all(color, toBeColord);
 
   assert(top == lua_gettop(L));
   return 0;
