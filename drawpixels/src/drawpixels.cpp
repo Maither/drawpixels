@@ -2128,27 +2128,44 @@ namespace{
 
   char crossTranslations[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
+//xytoi() is implemented above
   struct pt {
     public:
-      int x;
-      int y;
-      int _xytoi;
+      int x{0};
+      int y{0};
+      int _xytoi{0};
 
-      pt () {
-        this->x = 0; 
-        this-> y = 0;
-        this->_xytoi = 0;
-        }
+      pt () = default;
 
-      pt(int x, int y) {
-        this->x = x; 
-        this->y = y;
-        this->_xytoi = xytoi(x, y);
-        }
+      pt(int x, int y) : x(x), y(y), _xytoi(xytoi(x, y)) {}
 
-      pt(const pt &a){
-        pt(a.x, a.y);
+      pt(const pt &a): x(a.x), y(a.y), _xytoi(a._xytoi) {}
+
+      pt(const pt &a, int b[2]){
+        pt(a.x + b[0], a.y + b[1]);
       }
+
+      pt& operator=(const pt& _other){
+        x = other.x;
+        y = other.y;
+        _xytoi = other._xytoi;
+        return *this;
+      }
+
+      pt& operator+(const pt& _other){
+        pt _pt{x + _other.x, y + _other.y};
+        return _pt; 
+      }
+
+      pt& operator+(const int a[0]){
+        pt _pt{x + a[0], y + a[1]};
+        return _pt; 
+      }
+
+      pt& operator==(const pt& _other){
+        return _xytoi == _other._xytoi;
+      }
+
 
       void setxy(int x, int y) {
         this->x = x; 
@@ -2247,35 +2264,45 @@ static int fad(lua_State *L){
     return 1;
   }
 
-  pt firthMatch{x, y0};
 
-  pt nebourgs[8];
+  pt match{x, y0};
+  pt fithMatch = match;
+  pt newMatch;
 
-  generateNebours(firthMatch, translations, nebourgs, 8);
+  int dirIndex;
 
-  pt crossIndex[4];
-
-  std::list<pt> test;
+  std::list<pt> toBeColord;
 
   for (char i = 0; i < 8; i++)
   {
-    if(not compare_color(nebourgs[i], color))
+    pt currentPoint = match + translations[i];
+
+    if(not compare_color(currentPoint, color))
     {
-      pt foo{nebourgs[i]};
-      generateNebours(foo, crossTranslations, crossIndex, 4);
-
-      for (int j = 0; j < 4; j++)
+      toBeColord::push_back(currentPoint);
+    }
+    else
+    {
+      for (char j = 0; j < 4; j++)
       {
-        break;
+        ///////////////////////////////
+        pt _currentPoint = currentPoint + crossTranslations[j];
+        if(not compare_color(_currentPoint, color))
+        {
+          newMatch = currentPoint;
+          dirIndex = i;
+          break;
+        }
       }
-      
 
-      //putpixel(nebourgs[i][0], nebourgs[i][1], 0, 0, 0, 255);
     }
   }
 
+  match = newMatch;
+
   assert(top == lua_gettop(L));
   return 0;
+
 }
 
 // Functions exposed to Lua
