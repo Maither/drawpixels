@@ -1959,9 +1959,9 @@ namespace{
       }
 
       pt& operator=(const pt& _other){
-        x = other.x;
-        y = other.y;
-        _xytoi = other._xytoi;
+        x = _other.x;
+        y = _other.y;
+        _xytoi = _other._xytoi;
         return *this;
       }
 
@@ -1970,12 +1970,17 @@ namespace{
         return _pt; 
       }
 
-      pt& operator+(const int a[0]){
+      pt& operator+(const int a[2]){
         pt _pt{x + a[0], y + a[1]};
         return _pt; 
       }
 
-      pt& operator==(const pt& _other){
+      pt& operator+(const char a[2]){
+        pt _pt{x + a[0], y + a[1]};
+        return _pt; 
+      }
+
+      bool operator==(const pt& _other){
         return _xytoi == _other._xytoi;
       }
 
@@ -1999,11 +2004,11 @@ void generateNebours(const pt a, const char translations[][2], pt nebours[], cha
   }
 }
 
-static void color_all(Color color, list<pt>& toBeColord){
+static void color_all(Color color, std::list<pt>& toBeColord){
 
   for(const pt& i: toBeColord)
   {
-    putpixel(i.x, i.y, color.r, color.g, color.b, 1)
+    putpixel(i.x, i.y, color.r, color.g, color.b, 1);
   }
 
 }
@@ -2050,9 +2055,10 @@ int findFithEdge(int x, int y, Color color){
   return XY.x;
 }
 
-void storeAllEdge(pt firthMatch, list<pt>& toBeColord){
+void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
 
   int dirIndex;
+  pt newMatch;
 
   for (char i = 0; i < 8; i++)
   {
@@ -2150,7 +2156,7 @@ static int fad(lua_State *L){
 
 
   pt match{x, y0};
-  pt fithMatch = match;
+  pt firthMatch = match;
   pt newMatch;
 
   int dirIndex;
