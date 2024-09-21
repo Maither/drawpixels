@@ -2066,7 +2066,7 @@ void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
 
     if(not compare_color(currentPoint, color))
     {
-      toBeColord::push_back(currentPoint);
+      toBeColord.push_back(currentPoint);
     }
     else
     {
@@ -2087,7 +2087,7 @@ void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
   pt match = newMatch;
 
 
-while (not newMatch == firthMatch)
+while (not (newMatch == firthMatch))
 {
 
 
@@ -2101,7 +2101,7 @@ while (not newMatch == firthMatch)
     if(validates[dirIndex][translations[i][0]][translations[i][1]]){
       if(not compare_color(currentPoint, color))
       {
-        toBeColord::push_back(currentPoint);
+        toBeColord.push_back(currentPoint);
       }
       else
       {
@@ -2169,7 +2169,7 @@ static int fad(lua_State *L){
 
     if(not compare_color(currentPoint, color))
     {
-      toBeColord::push_back(currentPoint);
+      toBeColord.push_back(currentPoint);
     }
     else
     {
@@ -2189,7 +2189,7 @@ static int fad(lua_State *L){
 
   match = newMatch;
 
-  storeAllEdge(firthMatch, toBeColord);
+  storeAllEdge(firthMatch, toBeColord, color);
 
   color_all(color, toBeColord);
 
