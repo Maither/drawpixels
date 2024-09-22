@@ -2046,8 +2046,6 @@ int findFithEdge(int x, int y, Color color){
   int foo = 0;
   int i = x;
 
-
-
   while (not compare_color(i, y, color))
   {
     if( foo == 0)
@@ -2071,6 +2069,7 @@ int findFithEdge(int x, int y, Color color){
   return i;
 }
 
+/*
 void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
 
   int dirIndex; //number that represent the translation
@@ -2129,9 +2128,66 @@ while (not (match._xytoi == firthMatch._xytoi))
     }
   }
 }
+}*/
+
+void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
+
+  int dirIndex; //number that represent the translation
+  pt newMatch;
+
+  for (char i = 0; i < 8; i++)
+  {
+    pt candidate = firthMatch + translations[i];
+
+    if(not compare_color(candidate, color))
+    {
+      toBeColord.push_back(candidate);
+    }
+    else//look if it can be a canditate for the next sersh
+    {
+      for (char j = 0; j < 4; j++)
+      {
+        pt currentPoint = candidate + crossTranslations[j];
+        if(not compare_color(currentPoint, color))
+        {
+          newMatch = candidate;
+          dirIndex = i;
+          break;
+        }
+      }
+    }
+  }
+
+  pt match = newMatch;
 
 
-
+while (not (match._xytoi == firthMatch._xytoi))
+{
+  for (char i = 0; i < 8; i++)
+  {
+    pt candidate = match + translations[i];
+    //if(validates[dirIndex][translations[i][0]][translations[i][1]]){
+      if(not compare_color(candidate, color))
+      {
+        toBeColord.push_back(candidate);
+      }
+      else
+      {
+        for (char j = 0; j < 4; j++)
+        {
+          pt currentPoint = candidate + crossTranslations[j];
+          if(not compare_color(currentPoint, color))
+          {
+            newMatch = candidate;
+            dirIndex = i;
+            break;
+          }
+        }
+      }
+      match = newMatch;
+    //}
+  }
+}
 }
 
 static int fad(lua_State *L){
