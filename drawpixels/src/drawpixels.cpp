@@ -2102,7 +2102,7 @@ void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
   pt match = newMatch;
 
 
-while (not (match == firthMatch))
+while (not (match._xytoi == firthMatch._xytoi))
 {
   for (char i = 0; i < 8; i++)
   {
