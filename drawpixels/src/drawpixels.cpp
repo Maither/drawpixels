@@ -2073,60 +2073,53 @@ int findFithEdge(int x, int y, Color color){
 
 void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
 
-  int dirIndex;
+  int dirIndex; //number that represent the translation
   pt newMatch;
 
   for (char i = 0; i < 8; i++)
   {
-    pt currentPoint = firthMatch + translations[i];
+    pt candidate = firthMatch + translations[i];
 
-    if(not compare_color(currentPoint, color))
+    if(not compare_color(candidate, color))
     {
-      toBeColord.push_back(currentPoint);
+      toBeColord.push_back(candidate);
     }
-    else
+    else//look if it can be a canditate for the next sersh
     {
       for (char j = 0; j < 4; j++)
       {
-        pt _currentPoint = currentPoint + crossTranslations[j];
-        if(not compare_color(_currentPoint, color))
+        pt currentPoint = candidate + crossTranslations[j];
+        if(not compare_color(currentPoint, color))
         {
-          newMatch = currentPoint;
+          newMatch = candidate;
           dirIndex = i;
           break;
         }
       }
-
     }
   }
 
   pt match = newMatch;
 
 
-while (not (newMatch == firthMatch))
+while (not (match == firthMatch))
 {
-
-
   for (char i = 0; i < 8; i++)
   {
-    if(newMatch == firthMatch){
-      return;
-    }
-
-    pt currentPoint = match + translations[i];
+    pt candidate = match + translations[i];
     if(validates[dirIndex][translations[i][0]][translations[i][1]]){
-      if(not compare_color(currentPoint, color))
+      if(not compare_color(candidate, color))
       {
-        toBeColord.push_back(currentPoint);
+        toBeColord.push_back(candidate);
       }
       else
       {
         for (char j = 0; j < 4; j++)
         {
-          pt _currentPoint = currentPoint + crossTranslations[j];
-          if(not compare_color(_currentPoint, color))
+          pt currentPoint = candidate + crossTranslations[j];
+          if(not compare_color(currentPoint, color))
           {
-            newMatch = currentPoint;
+            newMatch = candidate;
             dirIndex = i;
             break;
           }
@@ -2170,14 +2163,14 @@ static int fad(lua_State *L){
     return 1;
   }
 
+  pt firthMatch{x, y0};
+  //pt newMatch;
 
-  pt match{x, y0};
-  pt firthMatch = match;
-  pt newMatch;
-
-  int dirIndex;
+  //int dirIndex;
 
   std::list<pt> toBeColord;
+
+  /*
 
   for (char i = 0; i < 8; i++)
   {
@@ -2201,9 +2194,9 @@ static int fad(lua_State *L){
       }
 
     }
-  }
+  }*/
 
-  match = newMatch;
+  //match = newMatch;
 
   storeAllEdge(firthMatch, toBeColord, color);
 
