@@ -2029,30 +2029,44 @@ static bool compare_color(pt i, Color color){
 
 int findFithEdge(int x, int y, Color color){
   int foo = 0;
-  pt XY{x, y};
+  int i = x;
 
-  while (not compare_color(XY, color))
+  static bool compare_color(int i, int j, Color color){
+    _xytoi = xytoi(i, j);
+
+    uint32_t b_r = buffer_info.bytes[_xytoi];
+    uint32_t b_g = buffer_info.bytes[_xytoi + 1];
+    uint32_t b_b = buffer_info.bytes[_xytoi + 2];
+
+    if(b_r == color.r && b_g == color.g && b_b == color.b){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  while (not compare_color(i, y, color))
   {
-    
     if( foo == 0)
     {
-      XY.setxy(XY.x++, XY.y);
-      if (XY.x > buffer_info.width)
+      x++;
+      if (x > buffer_info.width)
       {
-        XY.setxy(x, XY.y);
         foo ++;
+        i = x;
       }
     }
     else
     {
-      XY.setxy(XY.x--, XY.y);
+      i--;
       if (XY.x < 0)
       {
         return -1;
       }
     }
   }
-  return XY.x;
+  return i;
 }
 
 void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
