@@ -2027,31 +2027,33 @@ static bool compare_color(pt i, Color color){
   }
 }
 
+static bool compare_color(int i, int j, Color color){
+  int _xytoi = xytoi(i, j);
+
+  uint32_t b_r = buffer_info.bytes[_xytoi];
+  uint32_t b_g = buffer_info.bytes[_xytoi + 1];
+  uint32_t b_b = buffer_info.bytes[_xytoi + 2];
+
+  if(b_r == color.r && b_g == color.g && b_b == color.b){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
 int findFithEdge(int x, int y, Color color){
   int foo = 0;
   int i = x;
 
-  static bool compare_color(int i, int j, Color color){
-    _xytoi = xytoi(i, j);
 
-    uint32_t b_r = buffer_info.bytes[_xytoi];
-    uint32_t b_g = buffer_info.bytes[_xytoi + 1];
-    uint32_t b_b = buffer_info.bytes[_xytoi + 2];
-
-    if(b_r == color.r && b_g == color.g && b_b == color.b){
-      return true;
-    }
-    else{
-      return false;
-    }
-  }
 
   while (not compare_color(i, y, color))
   {
     if( foo == 0)
     {
-      x++;
-      if (x > buffer_info.width)
+      i++;
+      if (i > buffer_info.width)
       {
         foo ++;
         i = x;
@@ -2060,7 +2062,7 @@ int findFithEdge(int x, int y, Color color){
     else
     {
       i--;
-      if (XY.x < 0)
+      if (i < 0)
       {
         return -1;
       }
