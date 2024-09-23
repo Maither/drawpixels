@@ -2042,6 +2042,7 @@ static bool compare_color(int i, int j, Color color){
   }
 }
 
+//return the x coordinate of a edge that is of the specifie color
 int findFithEdge(int x, int y, Color color){
   int foo = 0;
   int i = x;
@@ -2069,6 +2070,7 @@ int findFithEdge(int x, int y, Color color){
   return i;
 }
 
+//it dosn't worck because it dosn't look if the next math as already be tested
 /*
 void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
 
@@ -2130,28 +2132,57 @@ while (not (match._xytoi == firthMatch._xytoi))
 }
 }*/
 
+bool isOldMatch(const int xytois[], char count, const pt& p){
+  for (char i = 0; i < count; i++)
+  {
+    if (xytois[i] == p._xytoi)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+
+
+//it dosn't worck because it dosn't look if the next math as already be tested
 void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
 
   int dirIndex; //number that represent the translation
+  int xytoisIndex = 0;
+  char sizeXytois = 16;
+  int xytois[sizeXytois];
+
+  for (size_t i = 0; i < sizeXytois; i++)
+  {
+    xytois[i] = -1;
+  }
+  
   pt newMatch;
+
+  bool matchFound = false;
 
   for (char i = 0; i < 8; i++)
   {
     pt candidate = firthMatch + translations[i];
 
-    if(not compare_color(candidate, color))
+    if(!compare_color(candidate, color))
     {
       toBeColord.push_back(candidate);
     }
-    else//look if it can be a canditate for the next sersh
+    else if (!matchFound)
+    //look if it can be a canditate for the next serch
     {
       for (char j = 0; j < 4; j++)
       {
         pt currentPoint = candidate + crossTranslations[j];
         if(not compare_color(currentPoint, color))
         {
+          xytois[xytoiIndex] = candidate._xytoi;
+          xytoiIndex++;
           newMatch = candidate;
           dirIndex = i;
+          matchFound = true;
           break;
         }
       }
@@ -2161,34 +2192,43 @@ void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
   pt match = newMatch;
 
 
-while (not (match._xytoi == firthMatch._xytoi))
-{
-  for (char i = 0; i < 8; i++)
+  while (not (match._xytoi == firthMatch._xytoi))
   {
-    pt candidate = match + translations[i];
-    //if(validates[dirIndex][translations[i][0]][translations[i][1]]){
-      if(not compare_color(candidate, color))
-      {
-        toBeColord.push_back(candidate);
-      }
-      else
-      {
-        for (char j = 0; j < 4; j++)
+    matchFound = false;
+    for (char i = 0; i < 8; i++)
+    {
+      pt candidate = match + translations[i];
+      if(validates[dirIndex][translations[i][0]][translations[i][1]]){
+        if(not compare_color(candidate, color))
         {
-          pt currentPoint = candidate + crossTranslations[j];
-          if(not compare_color(currentPoint, color))
+          toBeColord.push_back(candidate);
+        }
+        else if (!matchFound)
+        {
+          for (char j = 0; j < 4; j++)
           {
-            newMatch = candidate;
-            dirIndex = i;
-            break;
+            pt currentPoint = candidate + crossTranslations[j];
+            if(!compare_color(currentPoint, color) && !isOldMatch(xytois, sizeXytois, candidate))
+            {
+              xytois[xytoiIndex] = candidate._xytoi;
+              xytoiIndex++;
+              if (xytoiIndex > sizeXytois)
+              {
+                xytoiIndex = 0;
+              }
+              newMatch = candidate;
+              dirIndex = i;
+              matchFound = true;
+              break;
+            }
           }
         }
+        match = newMatch;
       }
-      match = newMatch;
-    //}
+    }
   }
 }
-}
+
 
 static int fad(lua_State *L){
 
