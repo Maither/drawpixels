@@ -1896,50 +1896,6 @@ static int draw_bezier_lua(lua_State *L)
 
 namespace{
   char translations[8][2] = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
-  bool validates[8][3][3] = {
-    {//{0, 1}
-      {1, 1, 1}, 
-      {0, 0, 0},
-      {0, 0, 0}
-    },
-    {//{-1, 1}
-      {1, 1, 1},
-      {1, 0, 0},
-      {1, 0, 0}
-    },
-    {//{-1, 0}
-      {1, 0, 0},
-      {1, 0, 0},
-      {1, 0, 0}
-    },
-    {//{-1, -1}
-      {1, 0, 0},
-      {1, 0, 0},
-      {1, 1, 1}
-    },
-    {//{0, -1}
-      {0, 0, 0},
-      {0, 0, 0},
-      {1, 1, 1}
-    },
-    {//{1, -1}
-      {0, 0, 1},
-      {0, 0, 1},
-      {1, 1, 1}
-    },
-    {//{1, 0}
-      {0, 0, 1},
-      {0, 0, 1},
-      {0, 0, 1}
-    },
-    {//{1, 1}
-      {1, 1, 1},
-      {0, 0, 1},
-      {0, 0, 1}
-    }
-    };
-
-  char crossTranslations[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
 //xytoi() is implemented above
   struct pt {
@@ -1991,17 +1947,6 @@ namespace{
         this->_xytoi = xytoi(x, y);
         }
   };
-}
-
-void generateNebours(const pt a, const char translations[][2], pt nebours[], char count)
-{
-  for (int i = 0; i < count; i++)
-  {
-    //nebours[i].x = a.x + translations[i][0];
-    //nebours[i].y = a.y + translations[i][1];
-    nebours[i].setxy(a.x + translations[i][0], a.y + translations[i][1]);
-
-  }
 }
 
 static void color_all(Color color, std::list<pt>& toBeColord){
@@ -2070,163 +2015,64 @@ int findFithEdge(int x, int y, Color color){
   return i;
 }
 
-//it dosn't worck because it dosn't look if the next math as already be tested
-/*
+
+
+
+
+//b-a=c
+void vectorSubtraction(const int a[2], const int b[2], int c[2]){
+  c[0] = b[0] - a[0];
+  c[1] = b[1] - a[1];
+}
+
+void setOppositeVector(const int a[2], int b[2]){
+  b[0] = a[0] * -1;
+  b[1] = a[1] * -1;
+}
+
+void copieVector(const int a[2], int b[2]){
+  b[0] = a[0];
+  b[1] = a[1];
+}
+
+int getIndexForTranslation(const int v[2]){
+  for (size_t i = 0; i < 8; i++)
+  {
+    const int& translation = translations[i];
+    if((translation[0] == v[0]) && translation[1] == v[1])
+    {
+      return i,
+      }
+  }
+  return -1;
+}
+
+//Moore-Neighbor Tracing implementation + not matching color are stored in toBeColord.
 void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
 
-  int dirIndex; //number that represent the translation
-  pt newMatch;
+  pt match{firthMatch};
+  int indexTranslation = 4;
+  int exitV[2] = {-1, 0};
 
-  for (char i = 0; i < 8; i++)
+  do
   {
-    pt candidate = firthMatch + translations[i];
-
-    if(not compare_color(candidate, color))
+    for (size_t i = 0; i < 8; i++)
     {
-      toBeColord.push_back(candidate);
-    }
-    else//look if it can be a canditate for the next sersh
-    {
-      for (char j = 0; j < 4; j++)
-      {
-        pt currentPoint = candidate + crossTranslations[j];
-        if(not compare_color(currentPoint, color))
-        {
-          newMatch = candidate;
-          dirIndex = i;
-          break;
-        }
-      }
-    }
-  }
-
-  pt match = newMatch;
-
-
-while (not (match._xytoi == firthMatch._xytoi))
-{
-  for (char i = 0; i < 8; i++)
-  {
-    pt candidate = match + translations[i];
-    if(validates[dirIndex][translations[i][0]][translations[i][1]]){
+      pt candidate = match + translations[(indexTranslation + i) % 8];
       if(not compare_color(candidate, color))
       {
         toBeColord.push_back(candidate);
       }
       else
       {
-        for (char j = 0; j < 4; j++)
-        {
-          pt currentPoint = candidate + crossTranslations[j];
-          if(not compare_color(currentPoint, color))
-          {
-            newMatch = candidate;
-            dirIndex = i;
-            break;
-          }
-        }
+        match{candidate};
+        vectorSubtraction(translations[indexTranslation - 1 + i], translations[indexTranslation + i], exitV);
+        indexTranslation = getgetIndexForTranslation(exitV);
+        break;
       }
-      match = newMatch;
     }
-  }
-}
-}*/
-
-bool isOldMatch(const int xytois[], char count, const pt& p){
-  for (char i = 0; i < count; i++)
-  {
-    if (xytois[i] == p._xytoi)
-    {
-      return true;
-    }
-  }
-  return false;
-}
-
-
-
-//it dosn't worck because it dosn't look if the next math as already be tested
-void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
-
-  int dirIndex; //number that represent the translation
-  int xytoisIndex = 0;
-  char sizeXytois = 16;
-  int xytois[sizeXytois];
-
-  for (size_t i = 0; i < sizeXytois; i++)
-  {
-    xytois[i] = -1;
-  }
+  } while (!firthMatch._xytoi == match._xytoi);
   
-  pt newMatch;
-
-  bool matchFound = false;
-
-  for (char i = 0; i < 8; i++)
-  {
-    pt candidate = firthMatch + translations[i];
-
-    if(!compare_color(candidate, color))
-    {
-      toBeColord.push_back(candidate);
-    }
-    else if (!matchFound)
-    //look if it can be a canditate for the next serch
-    {
-      for (char j = 0; j < 4; j++)
-      {
-        pt currentPoint = candidate + crossTranslations[j];
-        if(not compare_color(currentPoint, color))
-        {
-          xytois[xytoiIndex] = candidate._xytoi;
-          xytoiIndex++;
-          newMatch = candidate;
-          dirIndex = i;
-          matchFound = true;
-          break;
-        }
-      }
-    }
-  }
-
-  pt match = newMatch;
-
-
-  while (not (match._xytoi == firthMatch._xytoi))
-  {
-    matchFound = false;
-    for (char i = 0; i < 8; i++)
-    {
-      pt candidate = match + translations[i];
-      if(validates[dirIndex][translations[i][0]][translations[i][1]]){
-        if(not compare_color(candidate, color))
-        {
-          toBeColord.push_back(candidate);
-        }
-        else if (!matchFound)
-        {
-          for (char j = 0; j < 4; j++)
-          {
-            pt currentPoint = candidate + crossTranslations[j];
-            if(!compare_color(currentPoint, color) && !isOldMatch(xytois, sizeXytois, candidate))
-            {
-              xytois[xytoiIndex] = candidate._xytoi;
-              xytoiIndex++;
-              if (xytoiIndex > sizeXytois)
-              {
-                xytoiIndex = 0;
-              }
-              newMatch = candidate;
-              dirIndex = i;
-              matchFound = true;
-              break;
-            }
-          }
-        }
-        match = newMatch;
-      }
-    }
-  }
 }
 
 
@@ -2247,7 +2093,6 @@ static int fad(lua_State *L){
     a = luaL_checknumber(L, 6);
   }
 
-  int curentIndex = 0;
   Color color;
   color.r = r;
   color.g = g;
@@ -2260,39 +2105,8 @@ static int fad(lua_State *L){
   }
 
   pt firthMatch{x, y0};
-  //pt newMatch;
-
-  //int dirIndex;
 
   std::list<pt> toBeColord;
-
-  /*
-
-  for (char i = 0; i < 8; i++)
-  {
-    pt currentPoint = match + translations[i];
-
-    if(not compare_color(currentPoint, color))
-    {
-      toBeColord.push_back(currentPoint);
-    }
-    else
-    {
-      for (char j = 0; j < 4; j++)
-      {
-        pt _currentPoint = currentPoint + crossTranslations[j];
-        if(not compare_color(_currentPoint, color))
-        {
-          newMatch = currentPoint;
-          dirIndex = i;
-          break;
-        }
-      }
-
-    }
-  }*/
-
-  //match = newMatch;
 
   storeAllEdge(firthMatch, toBeColord, color);
 
