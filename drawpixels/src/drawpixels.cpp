@@ -1895,7 +1895,7 @@ static int draw_bezier_lua(lua_State *L)
 }
 
 namespace{
-  char translations[8][2] = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
+  int translations[8][2] = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
 
 //xytoi() is implemented above
   struct pt {
@@ -2038,10 +2038,9 @@ void copieVector(const int a[2], int b[2]){
 int getIndexForTranslation(const int v[2]){
   for (size_t i = 0; i < 8; i++)
   {
-    const int& translation = translations[i];
-    if((translation[0] == v[0]) && translation[1] == v[1])
+    if((translations[i][0] == v[0]) && translations[i][1] == v[1])
     {
-      return i,
+      return i;
       }
   }
   return -1;
@@ -2065,9 +2064,9 @@ void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
       }
       else
       {
-        match{candidate};
+        match = candidate;
         vectorSubtraction(translations[indexTranslation - 1 + i], translations[indexTranslation + i], exitV);
-        indexTranslation = getgetIndexForTranslation(exitV);
+        indexTranslation = getIndexForTranslation(exitV);
         break;
       }
     }
