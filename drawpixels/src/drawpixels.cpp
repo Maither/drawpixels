@@ -1895,7 +1895,7 @@ static int draw_bezier_lua(lua_State *L)
 }
 
 namespace{
-  int translations[8][2] = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
+  int translations[8][2] = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}};
 
 //xytoi() is implemented above
   struct pt {
@@ -1989,35 +1989,18 @@ static bool compare_color(int i, int j, Color color){
 
 //return the x coordinate of a edge that is of the specifie color
 int findFithEdge(int x, int y, Color color){
-  int foo = 0;
   int i = x;
 
   while (not compare_color(i, y, color))
   {
-    if( foo == 0)
-    {
       i++;
       if (i > buffer_info.width)
       {
-        foo ++;
-        i = x;
-      }
-    }
-    else
-    {
-      i--;
-      if (i < 0)
-      {
         return -1;
       }
-    }
   }
   return i;
 }
-
-
-
-
 
 //b-a=c
 void vectorSubtraction(const int a[2], const int b[2], int c[2]){
@@ -2050,7 +2033,7 @@ int getIndexForTranslation(const int v[2]){
 void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
 
   pt match{firthMatch};
-  int indexTranslation = 4;
+  int indexTranslation = 0;
   int exitV[2] = {-1, 0};
 
   do
@@ -2157,7 +2140,6 @@ dmExtension::Result InitializeDrawPixelsExtension(dmExtension::Params *params)
   printf("Registered %s Extension\n", MODULE_NAME);
   return dmExtension::RESULT_OK;
 }
-
 dmExtension::Result AppFinalizeDrawPixelsExtension(dmExtension::AppParams *params)
 {
   return dmExtension::RESULT_OK;
