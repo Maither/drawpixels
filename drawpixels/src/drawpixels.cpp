@@ -1919,6 +1919,12 @@ namespace{
         this->y = y;
         this->_xytoi = xytoi(x, y);
         }
+
+      void setxy(const pt &a) {
+        this->x = a.x; 
+        this->y = a.y;
+        this->_xytoi = a._xytoi;
+        }
   };
 }
 
@@ -1981,16 +1987,6 @@ void vectorSubtraction(const int a[2], const int b[2], int c[2]){
   c[1] = b[1] - a[1];
 }
 
-void setOppositeVector(const int a[2], int b[2]){
-  b[0] = a[0] * -1;
-  b[1] = a[1] * -1;
-}
-
-void copieVector(const int a[2], int b[2]){
-  b[0] = a[0];
-  b[1] = a[1];
-}
-
 int getIndexForTranslation(const int v[2]){
   for (size_t i = 0; i < 8; i++)
   {
@@ -2013,21 +2009,28 @@ void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
   {
     for (size_t i = 0; i < 8; i++)
     {
-      pt candidate{match, translations[(indexTranslation + i) % 8]};
+      int boundedIndex = (indexTranslation + i) % 8;
+      pt candidate{match, translations[boundedIndex]};
       if(not compare_color(candidate, color))
       {
         toBeColord.push_back(candidate);
       }
       else
       {
-        match = candidate;
-        vectorSubtraction(translations[indexTranslation - 1 + i], translations[indexTranslation + i], exitV);
+        match.setxy(candidate);
+        if(boundedIndex == 0)
+        {
+          vectorSubtraction(translations[7], translations[0], exitV);
+        }
+        else
+        {
+          vectorSubtraction(translations[boundedIndex - 1], translations[boundedIndex], exitV); //vectorSubtraction(a, b, c) : b-a=c
+        }
         indexTranslation = getIndexForTranslation(exitV);
         break;
       }
     }
   } while (!firthMatch._xytoi == match._xytoi);
-  
 }
 
 
