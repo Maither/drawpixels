@@ -1914,33 +1914,6 @@ namespace{
         pt(a.x + b[0], a.y + b[1]);
       }
 
-      pt& operator=(const pt& _other){
-        x = _other.x;
-        y = _other.y;
-        _xytoi = _other._xytoi;
-        return *this;
-      }
-
-      pt& operator+(const pt& _other){
-        pt _pt{x + _other.x, y + _other.y};
-        return _pt; 
-      }
-
-      pt& operator+(const int a[2]){
-        pt _pt{x + a[0], y + a[1]};
-        return _pt; 
-      }
-
-      pt& operator+(const char a[2]){
-        pt _pt{x + a[0], y + a[1]};
-        return _pt; 
-      }
-
-      bool operator==(const pt& _other){
-        return _xytoi == _other._xytoi;
-      }
-
-
       void setxy(int x, int y) {
         this->x = x; 
         this->y = y;
@@ -1953,7 +1926,7 @@ static void color_all(Color color, std::list<pt>& toBeColord){
 
   for(const pt& i: toBeColord)
   {
-    putpixel(i.x, i.y, color.r, color.g, color.b, 1);
+    putpixel(i.x, i.y, color.r, color.g, color.b, 255);
   }
 
 }
@@ -2040,7 +2013,7 @@ void storeAllEdge(pt firthMatch, std::list<pt>& toBeColord, Color color){
   {
     for (size_t i = 0; i < 8; i++)
     {
-      pt candidate = match + translations[(indexTranslation + i) % 8];
+      pt candidate{match, translations[(indexTranslation + i) % 8]};
       if(not compare_color(candidate, color))
       {
         toBeColord.push_back(candidate);
